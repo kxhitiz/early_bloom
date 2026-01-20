@@ -1,0 +1,103 @@
+<div class="max-w-3xl mx-auto">
+  <!-- Profile Header -->
+  <div class="bg-white p-8 rounded-lg shadow-sm border border-stone-200 mb-8">
+    <div class="flex items-start gap-6">
+      <div class="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-700 font-bold text-3xl flex-shrink-0">
+        <%= @user.name.first.upcase %>
+      </div>
+      <div class="flex-grow">
+        <div class="flex items-start justify-between">
+          <div>
+            <h1 class="text-2xl font-bold text-stone-800 mb-1"><%= @user.name %></h1>
+            <p class="text-stone-500 text-sm mb-3">Member since <%= @user.created_at.strftime("%B %Y") %></p>
+          </div>
+          <% if logged_in? && current_user == @user %>
+            <%= link_to "Edit Profile", edit_user_path(@user), class: "text-sm px-4 py-2 border border-stone-300 text-stone-600 rounded-lg hover:bg-stone-50 transition" %>
+          <% end %>
+        </div>
+
+        <% if @user.bio.present? %>
+          <p class="text-stone-600"><%= @user.bio %></p>
+        <% end %>
+
+        <% if @user.child_profiles.any? %>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <% @user.child_profiles.each do |child| %>
+              <% if logged_in? && current_user == @user %>
+                <%= link_to edit_child_profile_path(child), class: "text-sm px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full hover:bg-emerald-100 transition" do %>
+                  <%= child.name %> · <%= child.age_in_months %> months ✎
+                <% end %>
+              <% else %>
+                <span class="text-sm px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full">
+                  <%= child.name %> · <%= child.age_in_months %> months
+                </span>
+              <% end %>
+            <% end %>
+            <% if logged_in? && current_user == @user %>
+              <%= link_to new_child_profile_path, class: "text-sm px-3 py-1 bg-stone-100 text-stone-600 rounded-full hover:bg-stone-200 transition" do %>
+                + Add Child
+              <% end %>
+            <% end %>
+          </div>
+        <% elsif logged_in? && current_user == @user %>
+          <div class="mt-4">
+            <%= link_to "Add your first child profile", new_child_profile_path, class: "text-sm px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="mt-6 pt-6 border-t border-stone-200 flex gap-6 text-sm text-stone-600">
+      <div>
+        <span class="font-bold text-stone-800 text-lg"><%= @posts.count %></span> posts
+      </div>
+      <div>
+        <span class="font-bold text-stone-800 text-lg"><%= @user.comments.count %></span> comments
+      </div>
+      <div>
+        <span class="font-bold text-stone-800 text-lg"><%= @user.reactions.count %></span> reactions given
+      </div>
+    </div>
+  </div>
+
+  <!-- User's Posts -->
+  <h2 class="text-xl font-bold text-stone-800 mb-4">Posts by <%= @user.name %></h2>
+
+  <% if @posts.any? %>
+    <div class="space-y-4">
+      <% @posts.each do |post| %>
+        <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200 hover:border-emerald-200 transition">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <p class="text-sm text-stone-500">
+                <%= post.child_profile.name %> · <%= post.child_profile.age_in_months %> months old ·
+                <%= time_ago_in_words(post.published_at) %> ago
+              </p>
+            </div>
+            <span class="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded"><%= post.post_type %></span>
+          </div>
+
+          <% if post.title.present? %>
+            <h3 class="text-lg font-semibold text-stone-800 mb-2"><%= post.title %></h3>
+          <% end %>
+
+          <p class="text-stone-600 mb-3"><%= truncate(post.body, length: 200) %></p>
+
+          <div class="flex items-center justify-between">
+            <%= link_to "Read more →", post_path(post), class: "text-emerald-600 hover:text-emerald-700 font-medium" %>
+
+            <div class="flex gap-2 text-sm text-stone-500">
+              <span><%= post.comments.count %> comments</span>
+              <span>·</span>
+              <span><%= post.reactions.count %> reactions</span>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="bg-white p-8 rounded-lg shadow-sm border border-stone-200 text-center">
+      <p class="text-stone-500"><%= @user.name %> hasn't posted anything yet.</p>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,20 @@
+require "test_helper"
+
+class CategoryTest < ActiveSupport::TestCase
+  # test "the truth" do
+  #   assert true
+  # end
+end
+
+# == Schema Information
+#
+# Table name: categories
+#
+#  id          :bigint           not null, primary key
+#  color       :string
+#  description :string
+#  icon        :string
+#  name        :string
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#

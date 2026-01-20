@@ -1,0 +1,44 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+one:
+  user: one
+  child_profile: one
+  title: MyString
+  body: MyText
+  post_type: MyString
+  published_at: 2026-01-20 10:42:24
+
+two:
+  user: two
+  child_profile: two
+  title: MyString
+  body: MyText
+  post_type: MyString
+  published_at: 2026-01-20 10:42:24
+
+# == Schema Information
+#
+# Table name: posts
+#
+#  id               :bigint           not null, primary key
+#  body             :text
+#  post_type        :string
+#  published_at     :datetime
+#  title            :string
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  category_id      :bigint
+#  child_profile_id :bigint           not null
+#  user_id          :bigint           not null
+#
+# Indexes
+#
+#  index_posts_on_category_id       (category_id)
+#  index_posts_on_child_profile_id  (child_profile_id)
+#  index_posts_on_user_id           (user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (category_id => categories.id)
+#  fk_rails_...  (child_profile_id => child_profiles.id)
+#  fk_rails_...  (user_id => users.id)
+#

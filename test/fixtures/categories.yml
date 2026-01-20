@@ -1,0 +1,25 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+one:
+  name: MyString
+  description: MyString
+  color: MyString
+  icon: MyString
+
+two:
+  name: MyString
+  description: MyString
+  color: MyString
+  icon: MyString
+
+# == Schema Information
+#
+# Table name: categories
+#
+#  id          :bigint           not null, primary key
+#  color       :string
+#  description :string
+#  icon        :string
+#  name        :string
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#

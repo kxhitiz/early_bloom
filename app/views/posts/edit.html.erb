@@ -1,0 +1,65 @@
+<div class="max-w-3xl mx-auto">
+  <h1 class="text-3xl font-bold text-emerald-700 mb-6">Edit Post</h1>
+
+  <div class="bg-white p-8 rounded-lg shadow-sm border border-stone-200">
+    <%= form_with model: @post, class: "space-y-6" do |f| %>
+      <% if @post.errors.any? %>
+        <div class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg">
+          <ul class="list-disc list-inside">
+            <% @post.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div>
+        <%= f.label :child_profile_id, "Which child is this about?", class: "block text-sm font-medium text-stone-700 mb-2" %>
+        <%= f.collection_select :child_profile_id, @child_profiles, :id, :name, {}, class: "w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" %>
+      </div>
+
+      <div>
+        <%= f.label :category_id, "Category", class: "block text-sm font-medium text-stone-700 mb-2" %>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+          <% @categories.each do |category| %>
+            <label class="cursor-pointer">
+              <%= f.radio_button :category_id, category.id, class: "sr-only peer" %>
+              <div class="p-3 border border-stone-300 rounded-lg text-center peer-checked:border-emerald-500 peer-checked:bg-emerald-50 hover:bg-stone-50 transition">
+                <span class="text-xl"><%= category.icon %></span>
+                <p class="text-sm font-medium text-stone-700"><%= category.name %></p>
+              </div>
+            </label>
+          <% end %>
+        </div>
+      </div>
+
+      <div>
+        <%= f.label :post_type, "What kind of post is this?", class: "block text-sm font-medium text-stone-700 mb-2" %>
+        <%= f.select :post_type,
+            [
+              ['Question - I need help', 'question'],
+              ['Experience - Here\'s what happened', 'experience'],
+              ['Milestone - We did it!', 'milestone'],
+              ['Advice - Here\'s what worked for us', 'advice']
+            ],
+            {},
+            class: "w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" %>
+      </div>
+
+      <div>
+        <%= f.label :title, "Title (optional)", class: "block text-sm font-medium text-stone-700 mb-2" %>
+        <%= f.text_field :title, class: "w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" %>
+      </div>
+
+      <div>
+        <%= f.label :body, "Your story", class: "block text-sm font-medium text-stone-700 mb-2" %>
+        <%= f.text_area :body, rows: 10, class: "w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" %>
+      </div>
+
+      <div class="flex gap-4">
+        <%= f.submit "Save Changes", class: "px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold cursor-pointer" %>
+        <%= link_to "Cancel", @post, class: "px-8 py-3 bg-stone-200 hover:bg-stone-300 text-stone-700 rounded-lg font-semibold" %>
+      </div>
+    <% end %>
+  </div>
+</div>
