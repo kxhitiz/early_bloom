@@ -35,6 +35,27 @@
       <%= simple_format(@post.body) %>
     </div>
 
+    <% if @post.post_type == "question" && @post.ai_answer.present? %>
+      <div class="bg-white rounded-2xl p-5 mb-6 shadow-[0_2px_16px_-4px_rgba(139,92,246,0.18)]">
+        <div class="flex items-start gap-3">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center">
+            <span class="text-white text-sm">✨</span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-1 mb-2">
+              <span class="font-semibold text-violet-600">Bloom AI</span>
+            </div>
+            <div class="text-slate-700 leading-relaxed">
+              <%= simple_format(@post.ai_answer) %>
+            </div>
+            <p class="mt-4 text-xs text-slate-400">
+              Always consult your pediatrician for medical advice.
+            </p>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
     <% if logged_in? && current_user == @post.user %>
       <div class="pt-4 border-t border-stone-200 flex items-center gap-4">
         <%= link_to "Edit Post", edit_post_path(@post), class: "text-emerald-600 hover:text-emerald-700 font-medium" %>

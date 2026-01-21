@@ -11,6 +11,7 @@ end
 # Table name: posts
 #
 #  id               :bigint           not null, primary key
+#  ai_answer        :text
 #  body             :text
 #  post_type        :string
 #  published_at     :datetime

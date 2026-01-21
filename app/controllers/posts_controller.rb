@@ -3,16 +3,22 @@ class PostsController < ApplicationController
   before_action :require_child_profile, only: [:new, :create]
 
   def index
-    @posts = Post.published.includes(:user, :child_profile, :reactions, :category).page(params[:page])
+    @posts = Post.published.includes(:user, :child_profile, :reactions, :category)
+    @posts = @posts.where(category_id: params[:category]) if params[:category].present?
+    @posts = @posts.where(post_type: params[:post_type]) if params[:post_type].present?
+    @posts = @posts.page(params[:page])
+    @categories = Category.all
+    @current_category = Category.find_by(id: params[:category])
+    @current_post_type = params[:post_type]
   end
 
   def feed
-    require_login
-    require_child_profile
-    
+    return unless require_login
+    return unless require_child_profile
+
     @child_profile = current_user.child_profiles.first
     @posts = FeedBuilder.new(@child_profile).posts.page(params[:page])
-    
+
     render :index
   end
 

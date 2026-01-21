@@ -16,11 +16,16 @@ class ApplicationController < ActionController::Base
   def require_login
     unless logged_in?
       redirect_to login_path, alert: "Please log in to continue"
+      return false
     end
+    true
   end
 
   def require_child_profile
-    return if current_user&.child_profiles&.any?
-    redirect_to new_child_profile_path, alert: "Please create a child profile to continue"
+    unless current_user&.child_profiles&.any?
+      redirect_to new_child_profile_path, alert: "Please create a child profile to continue"
+      return false
+    end
+    true
   end
 end

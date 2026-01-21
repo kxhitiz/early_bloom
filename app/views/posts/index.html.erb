@@ -1,8 +1,33 @@
 <div>
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-3xl font-bold text-emerald-700">Community Feed 🌱</h1>
-    <%= link_to "Share Your Experience", new_post_path, class: "px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold" %>
+    <% if logged_in? %>
+      <%= link_to "Share Your Experience", new_post_path, class: "px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold" %>
+    <% end %>
   </div>
+
+  <% if logged_in? && current_user.child_profiles.any? %>
+    <div class="flex gap-2 mb-4">
+      <%= link_to feed_path, class: "px-4 py-2 rounded-lg font-medium #{@child_profile ? 'bg-emerald-600 text-white' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'}" do %>
+        For You
+        <% if @child_profile %>
+          <span class="text-emerald-200 text-sm">(±3 months)</span>
+        <% end %>
+      <% end %>
+      <%= link_to "Explore All", posts_path, class: "px-4 py-2 rounded-lg font-medium #{!@child_profile && !@current_category ? 'bg-emerald-600 text-white' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'}" %>
+    </div>
+  <% end %>
+
+  <% if @categories&.any? && !@child_profile %>
+    <div class="flex flex-wrap gap-2 mb-6">
+      <%= link_to "All", posts_path, class: "px-3 py-1.5 rounded-full text-sm font-medium #{@current_category.nil? ? 'bg-emerald-600 text-white' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'}" %>
+      <% @categories.each do |category| %>
+        <%= link_to posts_path(category: category.id), class: "px-3 py-1.5 rounded-full text-sm font-medium #{@current_category == category ? 'bg-emerald-600 text-white' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'}" do %>
+          <%= category.icon %> <%= category.name %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
 
   <% if @posts.any? %>
     <div class="space-y-6">
@@ -23,13 +48,13 @@
             </div>
             <div class="flex flex-col items-end gap-1">
               <% if post.category %>
-                <span class="text-xs px-2 py-1 bg-stone-100 text-stone-600 rounded-full">
+                <%= link_to posts_path(category: post.category.id), class: "text-xs px-2 py-1 bg-stone-100 text-stone-600 rounded-full hover:bg-stone-200 transition" do %>
                   <%= post.category.icon %> <%= post.category.name %>
-                </span>
+                <% end %>
               <% end %>
-              <span class="text-xs px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full font-medium">
+              <%= link_to posts_path(post_type: post.post_type), class: "text-xs px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full font-medium hover:bg-emerald-100 transition" do %>
                 <%= post.post_type %>
-              </span>
+              <% end %>
             </div>
           </div>
           
@@ -40,7 +65,25 @@
           <div class="text-stone-600 mb-4">
             <%= simple_format(truncate(post.body, length: 300)) %>
           </div>
-          
+
+          <% if post.post_type == "question" && post.ai_answer.present? %>
+            <div class="bg-white rounded-2xl p-4 mb-4 shadow-[0_2px_12px_-3px_rgba(139,92,246,0.15)]">
+              <div class="flex items-start gap-3">
+                <div class="flex-shrink-0 w-7 h-7 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center">
+                  <span class="text-white text-xs">✨</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-1 mb-1.5">
+                    <span class="text-sm font-semibold text-violet-600">Bloom AI</span>
+                  </div>
+                  <div class="text-sm text-slate-600 leading-relaxed">
+                    <%= truncate(post.ai_answer, length: 180, omission: '...') %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+
           <div class="flex items-center gap-6 text-sm text-stone-500">
             <span>💬 <%= post.comments.count %> comments</span>
             <span>💚 <%= post.reactions.count %> reactions</span>
@@ -58,8 +101,16 @@
     </div>
   <% else %>
     <div class="bg-white p-12 rounded-lg shadow-sm border border-stone-200 text-center">
-      <p class="text-xl text-stone-600 mb-4">No posts yet. Be the first to share!</p>
-      <%= link_to "Create the First Post", new_post_path, class: "inline-block px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold" %>
+      <% if @child_profile %>
+        <p class="text-xl text-stone-600 mb-2">No posts from parents with babies around <%= @child_profile.age_in_months %> months old yet.</p>
+        <p class="text-stone-500 mb-6">Try exploring all posts from the community!</p>
+        <%= link_to "Explore All Posts", posts_path, class: "inline-block px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold" %>
+      <% else %>
+        <p class="text-xl text-stone-600 mb-4">No posts yet. Be the first to share!</p>
+        <% if logged_in? %>
+          <%= link_to "Create the First Post", new_post_path, class: "inline-block px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold" %>
+        <% end %>
+      <% end %>
     </div>
   <% end %>
 </div>

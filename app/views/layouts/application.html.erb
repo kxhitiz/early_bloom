@@ -13,8 +13,8 @@
 
     <%= yield :head %>
 
-    <%= favicon_link_tag "early_bloom_icon.svg", type: "image/svg+xml" %>
-    <%= favicon_link_tag "early_bloom_icon.svg", rel: "apple-touch-icon", type: "image/svg+xml" %>
+    <%= favicon_link_tag "favicon.svg", type: "image/svg+xml" %>
+    <%= favicon_link_tag "favicon.svg", rel: "apple-touch-icon", type: "image/svg+xml" %>
 
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
@@ -69,7 +69,9 @@
     <footer class="bg-white border-t border-stone-200 mt-16 py-8">
       <div class="max-w-5xl mx-auto px-4 text-center">
         <div class="flex justify-center mb-3">
-          <%= image_tag "early_bloom_icon.svg", alt: "Early Bloom", class: "h-8 opacity-60" %>
+          <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" class="h-8 w-auto opacity-60">
+            <text x="24" y="32" font-family="Pacifico, cursive" font-size="24" fill="#059669" text-anchor="middle">EB</text>
+          </svg>
         </div>
         <p class="text-stone-500 text-sm">Early Bloom - A calm, supportive space for new parents</p>
         <p class="mt-2 text-stone-400 text-xs">Remember: You're not alone, and you're doing great.</p>
