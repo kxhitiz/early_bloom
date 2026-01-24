@@ -24,6 +24,9 @@ Rails.application.routes.draw do
     resources :reactions, only: [:create, :destroy]
   end
 
+  # Category posts
+  get ":category/posts", to: "posts#index", as: :category_posts
+
   # Feed (age-aware)
   get "feed", to: "posts#feed"
 

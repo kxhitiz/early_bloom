@@ -3,13 +3,14 @@ class PostsController < ApplicationController
   before_action :require_child_profile, only: [:new, :create]
 
   def index
+    @categories = Category.all
+    @current_category = find_category
+    @current_post_type = params[:post_type]
+
     @posts = Post.published.includes(:user, :child_profile, :reactions, :category)
-    @posts = @posts.where(category_id: params[:category]) if params[:category].present?
+    @posts = @posts.where(category_id: @current_category.id) if @current_category
     @posts = @posts.where(post_type: params[:post_type]) if params[:post_type].present?
     @posts = @posts.page(params[:page])
-    @categories = Category.all
-    @current_category = Category.find_by(id: params[:category])
-    @current_post_type = params[:post_type]
   end
 
   def feed
@@ -71,6 +72,16 @@ class PostsController < ApplicationController
   end
 
   private
+
+  def find_category
+    return nil unless params[:category].present?
+
+    if params[:category].to_s.match?(/^\d+$/)
+      Category.find_by(id: params[:category])
+    else
+      Category.find_by_slug(params[:category])
+    end
+  end
 
   def post_params
     params.require(:post).permit(:title, :body, :post_type, :child_profile_id, :category_id)
