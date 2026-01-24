@@ -30,6 +30,13 @@ Rails.application.routes.draw do
   # Feed (age-aware)
   get "feed", to: "posts#feed"
 
+  # Feature Requests
+  resources :feature_requests, only: [:index, :create] do
+    member do
+      post :vote
+    end
+  end
+
   # Health check
   get "up" => "rails/health#show", as: :rails_health_check
 end

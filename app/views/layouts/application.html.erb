@@ -72,6 +72,7 @@
             <div class="border-t border-stone-100 pt-3 flex flex-col gap-2">
               <%= link_to "Feed", feed_path, class: "py-2 text-stone-600 hover:text-emerald-700" %>
               <%= link_to "New Post", new_post_path, class: "py-2 text-stone-600 hover:text-emerald-700" %>
+              <%= link_to "Feature Requests", feature_requests_path, class: "py-2 text-stone-600 hover:text-emerald-700" %>
               <%= button_to "Logout", logout_path, method: :delete, class: "py-2 text-left text-stone-600 hover:text-emerald-700" %>
             </div>
           <% else %>
@@ -107,6 +108,9 @@
         </div>
         <p class="text-stone-500 text-sm">Early Bloom - A calm, supportive space for new parents</p>
         <p class="mt-2 text-stone-400 text-xs">Remember: You're not alone, and you're doing great.</p>
+        <div class="mt-4">
+          <%= link_to "Feature Requests", feature_requests_path, class: "text-sm text-emerald-600 hover:text-emerald-700" %>
+        </div>
       </div>
     </footer>
   </body>

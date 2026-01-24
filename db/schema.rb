@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_21_001725) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_24_215716) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -40,6 +40,31 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_21_001725) do
     t.datetime "updated_at", null: false
     t.index ["post_id"], name: "index_comments_on_post_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
+  create_table "feature_requests", force: :cascade do |t|
+    t.string "title", null: false
+    t.text "description", null: false
+    t.bigint "user_id"
+    t.string "status", default: "pending"
+    t.integer "votes_count", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "guest_name"
+    t.string "guest_email"
+    t.index ["status"], name: "index_feature_requests_on_status"
+    t.index ["user_id"], name: "index_feature_requests_on_user_id"
+    t.index ["votes_count"], name: "index_feature_requests_on_votes_count"
+  end
+
+  create_table "feature_votes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "feature_request_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["feature_request_id"], name: "index_feature_votes_on_feature_request_id"
+    t.index ["user_id", "feature_request_id"], name: "index_feature_votes_on_user_id_and_feature_request_id", unique: true
+    t.index ["user_id"], name: "index_feature_votes_on_user_id"
   end
 
   create_table "posts", force: :cascade do |t|
@@ -81,6 +106,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_21_001725) do
   add_foreign_key "child_profiles", "users"
   add_foreign_key "comments", "posts"
   add_foreign_key "comments", "users"
+  add_foreign_key "feature_requests", "users"
+  add_foreign_key "feature_votes", "feature_requests"
+  add_foreign_key "feature_votes", "users"
   add_foreign_key "posts", "categories"
   add_foreign_key "posts", "child_profiles"
   add_foreign_key "posts", "users"
