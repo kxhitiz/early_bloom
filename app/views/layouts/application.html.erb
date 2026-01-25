@@ -18,6 +18,7 @@
 
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+    <%= render 'shared/analytics' if Rails.env.production? %>
   </head>
 
   <body class="bg-stone-50 text-stone-800 min-h-screen">
