@@ -42,6 +42,9 @@
           <td class="px-4 py-3 text-right">
             <%= link_to "View", admin_user_path(user), class: "text-sm text-emerald-600 hover:text-emerald-700 mr-3" %>
             <%= link_to "Profile", user_path(user), target: "_blank", class: "text-sm text-stone-600 hover:text-emerald-700" %>
+            <% unless user == Current.user %>
+              <%= link_to "Delete", admin_user_path(user), data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete #{user.name}? This action cannot be undone." }, class: "text-sm text-red-600 hover:text-red-700 ml-3" %>
+            <% end %>
           </td>
         </tr>
       <% end %>

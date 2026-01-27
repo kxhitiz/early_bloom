@@ -8,4 +8,16 @@ class Admin::UsersController < Admin::BaseController
     @posts = @user.posts.order(created_at: :desc).limit(10)
     @comments = @user.comments.order(created_at: :desc).limit(10)
   end
+
+  def destroy
+    @user = User.find(params[:id])
+
+    if @user == Current.user
+      redirect_to admin_users_path, alert: "You cannot delete yourself."
+      return
+    end
+
+    @user.destroy
+    redirect_to admin_users_path, notice: "User \"#{@user.name}\" has been deleted."
+  end
 end

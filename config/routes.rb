@@ -8,7 +8,7 @@ Rails.application.routes.draw do
     root "dashboard#index"
     resources :posts, only: [:index, :show, :destroy]
     resources :comments, only: [:index, :destroy]
-    resources :users, only: [:index, :show]
+    resources :users, only: [:index, :show, :destroy]
   end
 
   # Authentication
