@@ -29,6 +29,16 @@
     </div>
   <% end %>
 
+  <% unless logged_in? %>
+    <div class="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-lg p-4 mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div>
+        <p class="text-emerald-800 font-medium">Join the conversation</p>
+        <p class="text-emerald-600 text-sm">Sign up to share your experiences, ask questions, and support other parents.</p>
+      </div>
+      <%= link_to "Sign Up Free", signup_path, class: "px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium text-center text-sm whitespace-nowrap" %>
+    </div>
+  <% end %>
+
   <% if @categories&.any? && !@child_profile %>
     <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 mb-6">
       <%= link_to "All", posts_path, class: "px-2 py-2 rounded-lg text-xs sm:text-sm font-medium text-center truncate #{@current_category.nil? ? 'bg-emerald-600 text-white' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'}" %>
@@ -99,9 +109,12 @@
             <span>💬 <%= post.comments.count %> comments</span>
             <span>💚 <%= post.reactions.count %> reactions</span>
           </div>
-          
-          <div class="mt-4">
+
+          <div class="mt-4 flex items-center gap-4">
             <%= link_to "Read & Respond", post_path(post), class: "text-emerald-600 hover:text-emerald-700 font-semibold" %>
+            <% unless logged_in? %>
+              <span class="text-xs text-stone-400">Login to comment & react</span>
+            <% end %>
           </div>
         </article>
       <% end %>
