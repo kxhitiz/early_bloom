@@ -11,6 +11,7 @@ end
 # Table name: users
 #
 #  id              :bigint           not null, primary key
+#  admin           :boolean          default(FALSE), not null
 #  bio             :text
 #  email           :string
 #  name            :string

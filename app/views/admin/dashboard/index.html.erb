@@ -1,0 +1,115 @@
+<h1 class="text-2xl font-bold text-slate-800 mb-6">Dashboard</h1>
+
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+  <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
+    <p class="text-sm text-slate-500 mb-1">Total Users</p>
+    <p class="text-3xl font-bold text-indigo-600"><%= @stats[:users] %></p>
+  </div>
+
+  <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
+    <p class="text-sm text-slate-500 mb-1">Total Posts</p>
+    <p class="text-3xl font-bold text-emerald-600"><%= @stats[:posts] %></p>
+  </div>
+
+  <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
+    <p class="text-sm text-slate-500 mb-1">Total Comments</p>
+    <p class="text-3xl font-bold text-amber-600"><%= @stats[:comments] %></p>
+  </div>
+
+  <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
+    <p class="text-sm text-slate-500 mb-1">Total Reactions</p>
+    <p class="text-3xl font-bold text-rose-600"><%= @stats[:reactions] %></p>
+  </div>
+</div>
+
+<!-- Daily Activity Chart -->
+<div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200 mb-8">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="font-semibold text-slate-800">Activity</h2>
+    <%= form_with url: admin_root_path, method: :get, data: { turbo_frame: "_top" } do |f| %>
+      <%= f.select :period,
+        [["Last 7 days", 7], ["Last 14 days", 14], ["Last 30 days", 30], ["Last 90 days", 90]],
+        { selected: @period },
+        { class: "px-3 py-1.5 border border-slate-300 rounded-md text-sm text-slate-700 bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500", onchange: "this.form.requestSubmit()" } %>
+    <% end %>
+  </div>
+  <div class="h-72">
+    <canvas
+      data-controller="chart"
+      data-chart-labels-value="<%= @daily_stats[:labels].to_json %>"
+      data-chart-users-value="<%= @daily_stats[:users].to_json %>"
+      data-chart-posts-value="<%= @daily_stats[:posts].to_json %>"
+      data-chart-comments-value="<%= @daily_stats[:comments].to_json %>"
+    ></canvas>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <!-- Recent Users -->
+  <div class="bg-white rounded-lg shadow-sm border border-slate-200">
+    <div class="p-4 border-b border-slate-200 flex justify-between items-center">
+      <h2 class="font-semibold text-slate-800">Recent Users</h2>
+      <%= link_to "View All", admin_users_path, class: "text-sm text-indigo-600 hover:text-indigo-700" %>
+    </div>
+    <div class="divide-y divide-slate-100">
+      <% @recent_users.each do |user| %>
+        <div class="p-4 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-700 font-semibold text-sm">
+              <%= user.name.first.upcase %>
+            </div>
+            <div>
+              <%= link_to user.name, admin_user_path(user), class: "font-medium text-slate-800 hover:text-indigo-600" %>
+              <p class="text-xs text-slate-500"><%= user.email %></p>
+            </div>
+          </div>
+          <span class="text-xs text-slate-400"><%= time_ago_in_words(user.created_at) %> ago</span>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Recent Posts -->
+  <div class="bg-white rounded-lg shadow-sm border border-slate-200">
+    <div class="p-4 border-b border-slate-200 flex justify-between items-center">
+      <h2 class="font-semibold text-slate-800">Recent Posts</h2>
+      <%= link_to "View All", admin_posts_path, class: "text-sm text-indigo-600 hover:text-indigo-700" %>
+    </div>
+    <div class="divide-y divide-slate-100">
+      <% @recent_posts.each do |post| %>
+        <div class="p-4">
+          <div class="flex items-start justify-between">
+            <div class="flex-1 min-w-0">
+              <%= link_to admin_post_path(post), class: "font-medium text-slate-800 hover:text-indigo-600 block truncate" do %>
+                <%= post.title.presence || truncate(post.body, length: 50) %>
+              <% end %>
+              <p class="text-xs text-slate-500">by <%= post.user.name %> &middot; <%= time_ago_in_words(post.created_at) %> ago</p>
+            </div>
+            <span class="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded"><%= post.post_type %></span>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- Recent Comments -->
+<div class="mt-6 bg-white rounded-lg shadow-sm border border-slate-200">
+  <div class="p-4 border-b border-slate-200 flex justify-between items-center">
+    <h2 class="font-semibold text-slate-800">Recent Comments</h2>
+    <%= link_to "View All", admin_comments_path, class: "text-sm text-indigo-600 hover:text-indigo-700" %>
+  </div>
+  <div class="divide-y divide-slate-100">
+    <% @recent_comments.each do |comment| %>
+      <div class="p-4">
+        <p class="text-slate-700 text-sm mb-2"><%= truncate(comment.body, length: 150) %></p>
+        <p class="text-xs text-slate-500">
+          by <%= comment.user.name %> on
+          <%= link_to truncate(comment.post.title.presence || comment.post.body, length: 30), admin_post_path(comment.post), class: "text-indigo-600 hover:text-indigo-700" %>
+          &middot; <%= time_ago_in_words(comment.created_at) %> ago
+        </p>
+      </div>
+    <% end %>
+  </div>
+</div>

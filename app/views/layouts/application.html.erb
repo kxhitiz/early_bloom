@@ -38,6 +38,9 @@
           <% if logged_in? %>
             <%= link_to "Feed", feed_path, class: "text-stone-600 hover:text-emerald-700" %>
             <%= link_to "New Post", new_post_path, class: "text-stone-600 hover:text-emerald-700" %>
+            <% if current_user.admin? %>
+              <%= link_to "Admin", admin_root_path, class: "text-purple-600 hover:text-purple-700" %>
+            <% end %>
             <%= link_to user_path(current_user), class: "flex items-center gap-2 text-stone-600 hover:text-emerald-700" do %>
               <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-700 font-semibold text-sm">
                 <%= current_user.name.first.upcase %>
@@ -75,6 +78,9 @@
               <%= link_to "Feed", feed_path, class: "py-2 text-stone-600 hover:text-emerald-700" %>
               <%= link_to "New Post", new_post_path, class: "py-2 text-stone-600 hover:text-emerald-700" %>
               <%= link_to "Feature Requests", feature_requests_path, class: "py-2 text-stone-600 hover:text-emerald-700" %>
+              <% if current_user.admin? %>
+                <%= link_to "Admin", admin_root_path, class: "py-2 text-purple-600 hover:text-purple-700" %>
+              <% end %>
               <%= button_to "Logout", logout_path, method: :delete, class: "py-2 text-left text-stone-600 hover:text-emerald-700" %>
             </div>
           <% else %>

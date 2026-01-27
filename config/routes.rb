@@ -3,6 +3,14 @@ Rails.application.routes.draw do
   get "reactions/destroy"
   root "home#index"
 
+  # Admin
+  namespace :admin do
+    root "dashboard#index"
+    resources :posts, only: [:index, :show, :destroy]
+    resources :comments, only: [:index, :destroy]
+    resources :users, only: [:index, :show]
+  end
+
   # Authentication
   resource :session, only: [:new, :create, :destroy]
   resource :registration, only: [:new, :create]

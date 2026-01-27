@@ -1,0 +1,50 @@
+<div class="flex justify-between items-center mb-6">
+  <h1 class="text-2xl font-bold text-stone-800">Posts</h1>
+  <p class="text-stone-500"><%= Post.count %> total</p>
+</div>
+
+<div class="bg-white rounded-lg shadow-sm border border-stone-200 overflow-hidden">
+  <table class="w-full">
+    <thead class="bg-stone-50 border-b border-stone-200">
+      <tr>
+        <th class="text-left px-4 py-3 text-sm font-semibold text-stone-600">Post</th>
+        <th class="text-left px-4 py-3 text-sm font-semibold text-stone-600">Author</th>
+        <th class="text-left px-4 py-3 text-sm font-semibold text-stone-600">Type</th>
+        <th class="text-left px-4 py-3 text-sm font-semibold text-stone-600">Stats</th>
+        <th class="text-left px-4 py-3 text-sm font-semibold text-stone-600">Created</th>
+        <th class="text-right px-4 py-3 text-sm font-semibold text-stone-600">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-stone-100">
+      <% @posts.each do |post| %>
+        <tr class="hover:bg-stone-50">
+          <td class="px-4 py-3">
+            <%= link_to admin_post_path(post), class: "text-stone-800 hover:text-emerald-700 font-medium" do %>
+              <%= truncate(post.title.presence || post.body, length: 50) %>
+            <% end %>
+          </td>
+          <td class="px-4 py-3 text-sm text-stone-600">
+            <%= link_to post.user.name, admin_user_path(post.user), class: "hover:text-emerald-700" %>
+          </td>
+          <td class="px-4 py-3">
+            <span class="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded"><%= post.post_type %></span>
+          </td>
+          <td class="px-4 py-3 text-sm text-stone-500">
+            <%= post.comments.count %> comments, <%= post.reactions.count %> reactions
+          </td>
+          <td class="px-4 py-3 text-sm text-stone-500">
+            <%= time_ago_in_words(post.created_at) %> ago
+          </td>
+          <td class="px-4 py-3 text-right">
+            <%= link_to "View", post_path(post), target: "_blank", class: "text-sm text-stone-600 hover:text-emerald-700 mr-3" %>
+            <%= button_to "Delete", admin_post_path(post), method: :delete, data: { turbo_confirm: "Are you sure you want to delete this post?" }, class: "text-sm text-red-600 hover:text-red-700" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="mt-6">
+  <%= paginate @posts %>
+</div>
