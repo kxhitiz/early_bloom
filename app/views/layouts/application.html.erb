@@ -46,6 +46,7 @@
             <% end %>
             <%= button_to "Logout", logout_path, method: :delete, class: "text-sm px-3 py-1 bg-stone-200 hover:bg-stone-300 rounded" %>
           <% else %>
+            <%= link_to "Browse Posts", posts_path, class: "text-stone-600 hover:text-emerald-700" %>
             <%= link_to "Login", login_path, class: "text-stone-600 hover:text-emerald-700" %>
             <%= link_to "Sign Up", signup_path, class: "px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg" %>
           <% end %>
@@ -77,6 +78,7 @@
               <%= button_to "Logout", logout_path, method: :delete, class: "py-2 text-left text-stone-600 hover:text-emerald-700" %>
             </div>
           <% else %>
+            <%= link_to "Browse Posts", posts_path, class: "py-2 text-stone-600 hover:text-emerald-700" %>
             <%= link_to "Login", login_path, class: "py-2 text-stone-600 hover:text-emerald-700" %>
             <%= link_to "Sign Up", signup_path, class: "py-2 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-center" %>
           <% end %>

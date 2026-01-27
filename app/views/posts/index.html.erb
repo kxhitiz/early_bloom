@@ -6,6 +6,17 @@
     <% end %>
   </div>
 
+  <!-- Search -->
+  <%= form_with url: posts_path, method: :get, class: "mb-6", data: { turbo_frame: "_top" } do |f| %>
+    <div class="flex gap-2">
+      <%= f.text_field :q, value: params[:q], placeholder: "Search posts...", class: "flex-1 px-4 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" %>
+      <%= f.submit "Search", class: "px-4 sm:px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium cursor-pointer" %>
+      <% if params[:q].present? %>
+        <%= link_to "Clear", posts_path, class: "px-4 py-2 bg-stone-200 hover:bg-stone-300 text-stone-700 rounded-lg font-medium" %>
+      <% end %>
+    </div>
+  <% end %>
+
   <% if logged_in? && current_user.child_profiles.any? %>
     <div class="flex flex-wrap gap-2 mb-4">
       <%= link_to feed_path, class: "px-3 sm:px-4 py-2 rounded-lg font-medium text-sm sm:text-base #{@child_profile ? 'bg-emerald-600 text-white' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'}" do %>

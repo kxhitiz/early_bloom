@@ -1,5 +1,9 @@
 <div class="max-w-3xl mx-auto">
-  <%= link_to "← Back to Feed", feed_path, class: "text-emerald-600 hover:text-emerald-700 mb-6 inline-block" %>
+  <% if logged_in? && current_user.child_profiles.any? %>
+    <%= link_to "← Back to Feed", feed_path, class: "text-emerald-600 hover:text-emerald-700 mb-6 inline-block" %>
+  <% else %>
+    <%= link_to "← Back to Posts", posts_path, class: "text-emerald-600 hover:text-emerald-700 mb-6 inline-block" %>
+  <% end %>
 
   <article class="bg-white p-8 rounded-lg shadow-sm border border-stone-200 mb-8">
     <div class="flex items-start justify-between mb-6">
@@ -68,12 +72,12 @@
   <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200 mb-8">
     <h3 class="font-semibold text-stone-800 mb-4">Show your support</h3>
     
-    <% if logged_in? %>
-      <div class="flex gap-3 flex-wrap">
-        <% ['helpful', 'reassuring', 'relatable', 'celebrate'].each do |reaction_type| %>
+    <div class="flex gap-3 flex-wrap">
+      <% ['helpful', 'reassuring', 'relatable', 'celebrate'].each do |reaction_type| %>
+        <% count = @post.reactions.where(reaction_type: reaction_type).count %>
+
+        <% if logged_in? %>
           <% user_reaction = @post.reactions.find_by(user: current_user, reaction_type: reaction_type) %>
-          <% count = @post.reactions.where(reaction_type: reaction_type).count %>
-          
           <% if user_reaction %>
             <%= button_to post_reaction_path(@post, user_reaction), method: :delete, class: "px-4 py-2 bg-emerald-100 border-2 border-emerald-600 text-emerald-700 rounded-lg font-medium hover:bg-emerald-200" do %>
               <%= reaction_emoji(reaction_type) %> <%= reaction_type.humanize %> (<%= count %>)
@@ -83,10 +87,15 @@
               <%= reaction_emoji(reaction_type) %> <%= reaction_type.humanize %> <%= "(#{count})" if count > 0 %>
             <% end %>
           <% end %>
+        <% else %>
+          <span class="px-4 py-2 bg-stone-50 border border-stone-200 text-stone-500 rounded-lg font-medium">
+            <%= reaction_emoji(reaction_type) %> <%= reaction_type.humanize %> <%= "(#{count})" if count > 0 %>
+          </span>
         <% end %>
-      </div>
-    <% else %>
-      <p class="text-stone-500"><%= link_to "Login", login_path, class: "text-emerald-600 hover:text-emerald-700" %> to react</p>
+      <% end %>
+    </div>
+    <% unless logged_in? %>
+      <p class="text-stone-500 mt-3 text-sm"><%= link_to "Login", login_path, class: "text-emerald-600 hover:text-emerald-700" %> to add your reaction</p>
     <% end %>
   </div>
 

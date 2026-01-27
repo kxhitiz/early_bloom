@@ -10,6 +10,7 @@ class PostsController < ApplicationController
     @posts = Post.published.includes(:user, :child_profile, :reactions, :category)
     @posts = @posts.where(category_id: @current_category.id) if @current_category
     @posts = @posts.where(post_type: params[:post_type]) if params[:post_type].present?
+    @posts = @posts.search(params[:q]) if params[:q].present?
     @posts = @posts.page(params[:page])
   end
 

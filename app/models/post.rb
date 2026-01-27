@@ -10,6 +10,9 @@ class Post < ApplicationRecord
 
   scope :published, -> { where.not(published_at: nil).order(published_at: :desc) }
   scope :recent, -> { published.limit(20) }
+  scope :search, ->(query) {
+    where("title ILIKE :q OR body ILIKE :q", q: "%#{sanitize_sql_like(query)}%")
+  }
 
   def publish!
     update(published_at: Time.current)

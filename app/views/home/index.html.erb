@@ -13,9 +13,10 @@
   </p>
   
   <% unless logged_in? %>
-    <div class="flex gap-4 justify-center">
-      <%= link_to "Join the Community", signup_path, class: "px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-lg font-semibold" %>
-      <%= link_to "Login", login_path, class: "px-8 py-3 bg-white hover:bg-stone-50 text-emerald-700 border border-emerald-600 rounded-lg text-lg font-semibold" %>
+    <div class="flex flex-wrap gap-4 justify-center">
+      <%= link_to "Browse Posts", posts_path, class: "px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-lg font-semibold" %>
+      <%= link_to "Join the Community", signup_path, class: "px-8 py-3 bg-white hover:bg-stone-50 text-emerald-700 border border-emerald-600 rounded-lg text-lg font-semibold" %>
+      <%= link_to "Login", login_path, class: "px-8 py-3 text-emerald-600 hover:text-emerald-700 text-lg font-medium" %>
     </div>
   <% end %>
 </div>
